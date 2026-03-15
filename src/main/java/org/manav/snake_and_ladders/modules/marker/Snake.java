@@ -1,8 +1,9 @@
 package org.manav.snake_and_ladders.modules.marker;
 
-public class Snake implements Marker{
+public class Snake implements Marker {
     private final int head;
     private final int tail;
+    private final String symbol = "S";
 
     public Snake(int head, int tail) {
         if (head <= tail) {
@@ -20,5 +21,15 @@ public class Snake implements Marker{
     @Override
     public int getEnd() {
         return this.tail;
+    }
+
+    @Override
+    public String getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public String getMessage() {
+        return "You got bit by a snake! [" + this.head + " -> " + this.tail + "]";
     }
 }

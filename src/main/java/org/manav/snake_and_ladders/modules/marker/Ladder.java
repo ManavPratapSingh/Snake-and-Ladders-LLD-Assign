@@ -1,8 +1,9 @@
 package org.manav.snake_and_ladders.modules.marker;
 
-public class Ladder implements Marker{
+public class Ladder implements Marker {
     private final int bottom;
     private final int top;
+    private final String symbol = "L";
 
     public Ladder(int bottom, int top) {
         if (bottom >= top) {
@@ -20,5 +21,15 @@ public class Ladder implements Marker{
     @Override
     public int getEnd() {
         return this.top;
+    }
+
+    @Override
+    public String getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public String getMessage() {
+        return "You climbed a ladder! [" + this.bottom + " -> " + this.top + "]";
     }
 }
