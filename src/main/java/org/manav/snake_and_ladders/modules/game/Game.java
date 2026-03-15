@@ -78,68 +78,83 @@ public class Game {
 
         Player currentPlayer = playerQueue.poll();
         int turnStartingPosition = currentPlayer.getPosition();
-        int sixCount = 0;
-        int turnaroundCount = 0; // sixCount is already used locally
-        boolean firstRollInTurn = true;
-        boolean turnCancelled = false;
+        int finalPosition = performRolls(currentPlayer);
 
-        while (firstRollInTurn || (sixCount > 0 && sixCount < 3)) {
-            firstRollInTurn = false;
-            int move = (int) (Math.random() * 6) + 1;
-            System.out.println("\n--- Player " + currentPlayer.getSymbol() + " rolled: " + move + " ---");
+        if (finalPosition != turnStartingPosition) {
+            board.removePlayer(currentPlayer, turnStartingPosition);
+            currentPlayer.setPosition(finalPosition);
+            board.placePlayer(currentPlayer, finalPosition);
 
-            if (move == 6) {
-                sixCount++;
-                if (sixCount == 3) {
-                    System.out.println(
-                            "!!! Three 6s in a row! Turn cancelled. Reverting to " + turnStartingPosition + " !!!");
-                    board.removePlayer(currentPlayer, currentPlayer.getPosition());
-                    currentPlayer.setPosition(turnStartingPosition);
-                    board.placePlayer(currentPlayer, turnStartingPosition);
-                    turnCancelled = true;
-                    break;
-                }
-            } else {
-                sixCount = 0; // Break the '6' chain
+            if (finalPosition == totalCells) {
+                gameOver = true;
+                System.out.println("\n********************");
+                System.out.println("*   PLAYER " + currentPlayer.getSymbol() + " WINS!   *");
+                System.out.println("********************");
             }
-
-            // Execute move
-            if (currentPlayer.getPosition() + move > totalCells) {
-                System.out.println("Roll too high! Cannot move from " + currentPlayer.getPosition());
-            } else {
-                board.removePlayer(currentPlayer, currentPlayer.getPosition());
-                currentPlayer.setPosition(currentPlayer.getPosition() + move);
-                board.placePlayer(currentPlayer, currentPlayer.getPosition());
-
-                // Check market consequence
-                if (board.getCell(currentPlayer.getPosition()).hasMarker()) {
-                    System.out.println("\n>>> "
-                            + board.getCell(currentPlayer.getPosition()).getMarker()
-                                    .getMessage(currentPlayer.getSymbol())
-                            + " <<<");
-                    board.removePlayer(currentPlayer, currentPlayer.getPosition());
-                    currentPlayer.setPosition(board.getCell(currentPlayer.getPosition()).getMarker().getEnd());
-                    board.placePlayer(currentPlayer, currentPlayer.getPosition());
-                }
-
-                if (currentPlayer.getPosition() == totalCells) {
-                    gameOver = true;
-                    System.out.println("\n********************");
-                    System.out.println("*   PLAYER " + currentPlayer.getSymbol() + " WINS!   *");
-                    System.out.println("********************");
-                    break;
-                }
-            }
-
-            if (sixCount == 0)
-                break; // Finished turn (didn't roll a 6)
-
-            System.out.println("You rolled a 6! You get another roll.");
         }
 
         if (!gameOver) {
             playerQueue.add(currentPlayer);
         }
+    }
+
+    private int performRolls(Player currentPlayer) {
+        int turnStartingPosition = currentPlayer.getPosition();
+        int currentPos = turnStartingPosition;
+        int sixCount = 0;
+        boolean firstRollInTurn = true; // case handling variables ------------------
+
+        while (firstRollInTurn || (sixCount > 0 && sixCount < 3)) { // for repeating turns when 6 is rolled
+            firstRollInTurn = false;
+            int move = (int) (Math.random() * 6) + 1;
+            System.out.println("\n--- Player " + currentPlayer.getSymbol() + " rolled: " + move + " ---");
+
+            if (move == 6) { // case handling when 6 is rolled
+                sixCount++;
+                if (sixCount == 3) {
+                    System.out.println(
+                            "!!! Three 6s in a row! Turn cancelled. Reverting to " + turnStartingPosition + " !!!");
+                    return turnStartingPosition;
+                }
+            } else {
+                sixCount = 0; // Break the '6' chain
+            }
+
+            // Calculate potential move
+            if (validMove(currentPos, move)) {
+                currentPos += move;
+                currentPos = handleMarkers(currentPlayer, currentPos); // implemented here because after a roll
+                                                                       // the player has to face marker consequence
+                                                                       // before next roll
+                if (currentPos == totalCells) {
+                    break;
+                }
+            }
+            if (sixCount == 0)
+                break; // Finished turn (didn't roll a 6)
+
+            System.out.println("You rolled a 6! You get another roll.");
+        }
+        return currentPos;
+    }
+
+    private int handleMarkers(Player currentPlayer, int pos) {
+        if (board.getCell(pos).hasMarker()) {
+            System.out.println("\n>>> "
+                    + board.getCell(pos).getMarker()
+                            .getMessage(currentPlayer.getSymbol())
+                    + " <<<");
+            return board.getCell(pos).getMarker().getEnd();
+        }
+        return pos;
+    }
+
+    private boolean validMove(int currentPos, int move) {
+        if (currentPos + move > totalCells) {
+            System.out.println("Roll too high! Cannot move from " + currentPos);
+            return false;
+        }
+        return true;
     }
 
     public boolean isGameOver() {
