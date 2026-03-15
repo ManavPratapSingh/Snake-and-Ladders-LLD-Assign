@@ -29,7 +29,7 @@ public class Ladder implements Marker {
     }
 
     @Override
-    public String getMessage() {
-        return "You climbed a ladder! [" + this.bottom + " -> " + this.top + "]";
+    public String getMessage(String symbol) {
+        return "Player " + symbol + " climbed a ladder! [" + this.bottom + " -> " + this.top + "]";
     }
 }

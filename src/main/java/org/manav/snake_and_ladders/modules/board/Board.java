@@ -1,10 +1,10 @@
 package org.manav.snake_and_ladders.modules.board;
 
+import java.util.Set;
+
 import org.manav.snake_and_ladders.modules.cell.Cell;
 import org.manav.snake_and_ladders.modules.marker.Marker;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.manav.snake_and_ladders.modules.player.Player;
 
 public class Board {
     private final int size;
@@ -39,22 +39,24 @@ public class Board {
         cells[cell_number - 1].setSymbol(marker.getSymbol());
     }
 
-    public void placePlayer(int position) {
-        cells[position - 1].setSymbol("P");
+    public void placePlayer(Player player, int position) {
+        cells[position - 1].getPlayers().add(player);
     }
 
-    public void removePlayer(int position) {
+    public void removePlayer(Player player, int position) {
         Cell cell = cells[position - 1];
-        if (cell.hasMarker()) {
-            cell.setSymbol(cell.getMarker().getSymbol());
-        } else {
-            cell.setSymbol(".");
-        }
+        cell.getPlayers().remove(player);
     }
 
     public void printBoard() {
         for (int i = size * size - 1; i >= 0; i--) {
-            System.out.print(cells[i].getSymbol() + " ");
+            if (cells[i].getPlayers().size() > 1) {
+                System.out.print(cells[i].getPlayers().size() + " ");
+            } else if (!cells[i].getPlayers().isEmpty()) {
+                System.out.print(cells[i].getPlayers().get(0).getSymbol() + " ");
+            } else {
+                System.out.print(cells[i].getSymbol() + " ");
+            }
             if (i % size == 0) {
                 System.out.println();
             }

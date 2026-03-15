@@ -7,5 +7,5 @@ public interface Marker {
 
     String getSymbol();
 
-    String getMessage();
+    String getMessage(String symbol);
 }

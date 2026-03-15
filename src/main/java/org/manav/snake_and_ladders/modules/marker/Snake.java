@@ -29,7 +29,7 @@ public class Snake implements Marker {
     }
 
     @Override
-    public String getMessage() {
-        return "You got bit by a snake! [" + this.head + " -> " + this.tail + "]";
+    public String getMessage(String symbol) {
+        return "Player " + symbol + " got bit by a snake! [" + this.head + " -> " + this.tail + "]";
     }
 }
