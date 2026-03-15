@@ -1,6 +1,6 @@
 package org.manav.snake_and_ladders.modules.marker;
 
-public class Snake implements Marker {
+public class Snake implements IMarker {
     private final int head;
     private final int tail;
     private final String symbol = "S";

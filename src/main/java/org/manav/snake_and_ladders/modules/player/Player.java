@@ -1,6 +1,6 @@
 package org.manav.snake_and_ladders.modules.player;
 
-public class Player {
+public class Player implements IPlayer {
     private final String symbol;
     private int position;
 
@@ -18,5 +18,10 @@ public class Player {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    @Override
+    public String getName() {
+        return this.symbol;
     }
 }

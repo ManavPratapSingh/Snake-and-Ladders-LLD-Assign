@@ -3,48 +3,53 @@ package org.manav.snake_and_ladders.modules.board;
 import java.util.Set;
 
 import org.manav.snake_and_ladders.modules.cell.Cell;
-import org.manav.snake_and_ladders.modules.marker.Marker;
-import org.manav.snake_and_ladders.modules.player.Player;
+import org.manav.snake_and_ladders.modules.cell.ICell;
+import org.manav.snake_and_ladders.modules.marker.IMarker;
+import org.manav.snake_and_ladders.modules.player.IPlayer;
 
-public class Board {
+public class Board implements IGameBoard {
     private final int size;
-    private Cell[] cells;
+    private ICell[] cells;
 
     public Board(int size) {
         this.size = size;
-        this.cells = new Cell[size * size];
+        this.cells = new ICell[size * size];
         for (int i = 0; i < size * size; i++) {
             int sum_indices = (i / size) + (i % size);
             cells[i] = new Cell(size, sum_indices, null);
         }
     }
 
-    public Cell[] getCells() {
+    public int getSize() {
+        return size;
+    }
+
+    public ICell[] getCells() {
         return cells;
     }
 
-    public Cell getCell(int position) {
+    public ICell getCell(int position) {
         return cells[position - 1];
     }
 
-    public void addAllMarkers(Set<Marker> markers) {
-        for (Marker marker : markers) {
+    public void addAllMarkers(Set<IMarker> markers) {
+        for (IMarker marker : markers) {
             addMarker(marker);
         }
     }
 
-    public void addMarker(Marker marker) {
+    public void addMarker(IMarker marker) {
         int cell_number = marker.getStart();
         cells[cell_number - 1] = new Cell(size, (cell_number - 1) / size + (cell_number - 1) % size, marker);
         cells[cell_number - 1].setSymbol(marker.getSymbol());
     }
 
-    public void placePlayer(Player player, int position) {
+    public void placePlayer(IPlayer player, int position) {
         cells[position - 1].getPlayers().add(player);
     }
 
-    public void removePlayer(Player player, int position) {
-        Cell cell = cells[position - 1];
+    public void removePlayer(IPlayer player, int position) {
+        ICell cell = cells[position - 1];
         cell.getPlayers().remove(player);
     }
 

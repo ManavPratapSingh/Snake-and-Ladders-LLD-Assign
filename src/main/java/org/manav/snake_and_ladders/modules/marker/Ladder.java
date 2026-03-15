@@ -1,6 +1,6 @@
 package org.manav.snake_and_ladders.modules.marker;
 
-public class Ladder implements Marker {
+public class Ladder implements IMarker {
     private final int bottom;
     private final int top;
     private final String symbol = "L";

@@ -1,5 +1,6 @@
 package org.manav.snake_and_ladders;
 
+import org.manav.snake_and_ladders.modules.board.Board;
 import org.manav.snake_and_ladders.modules.game.Game;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -7,7 +8,7 @@ import org.manav.snake_and_ladders.modules.game.Game;
 public class Main {
     public static void main(String[] args) {
         java.util.Scanner scanner = new java.util.Scanner(System.in);
-        Game game = new Game(10, 2);
+        Game game = new Game(new Board(10), 2);
         game.startGame();
 
         System.out.println("Welcome to Snake and Ladders!");
@@ -22,7 +23,7 @@ public class Main {
                 System.out.flush();
             }
         }
-        
+
         System.out.println("\nThanks for playing!");
         scanner.close();
     }

@@ -3,16 +3,16 @@ package org.manav.snake_and_ladders.modules.cell;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.manav.snake_and_ladders.modules.marker.Marker;
-import org.manav.snake_and_ladders.modules.player.Player;
+import org.manav.snake_and_ladders.modules.marker.IMarker;
+import org.manav.snake_and_ladders.modules.player.IPlayer;
 
-public class Cell {
+public class Cell implements ICell {
     private final int number;
     private String symbol;
-    private final Marker marker;
-    private final List<Player> players;
+    private final IMarker marker;
+    private final List<IPlayer> players;
 
-    public Cell(int size, int sum_indices, Marker marker) {
+    public Cell(int size, int sum_indices, IMarker marker) {
         this.number = (int) Math.pow(size, 2) - (sum_indices + 2) + 1;
         this.marker = marker;
         this.symbol = ".";
@@ -27,7 +27,7 @@ public class Cell {
         return marker != null;
     }
 
-    public Marker getMarker() {
+    public IMarker getMarker() {
         return marker;
     }
 
@@ -39,15 +39,15 @@ public class Cell {
         return symbol;
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(IPlayer player) {
         players.add(player);
     }
 
-    public void removePlayer(Player player) {
+    public void removePlayer(IPlayer player) {
         players.remove(player);
     }
 
-    public List<Player> getPlayers() {
+    public List<IPlayer> getPlayers() {
         return players;
     }
 }

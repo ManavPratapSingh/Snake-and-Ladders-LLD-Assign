@@ -1,6 +1,6 @@
 package org.manav.snake_and_ladders.modules.marker;
 
-public interface Marker {
+public interface IMarker {
     int getStart();
 
     int getEnd();

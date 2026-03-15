@@ -1,8 +1,9 @@
 package org.manav.snake_and_ladders.modules.game;
 
-import org.manav.snake_and_ladders.modules.board.Board;
+import org.manav.snake_and_ladders.modules.board.IGameBoard;
 import org.manav.snake_and_ladders.modules.marker.Ladder;
 import org.manav.snake_and_ladders.modules.marker.Snake;
+import org.manav.snake_and_ladders.modules.player.IPlayer;
 import org.manav.snake_and_ladders.modules.player.Player;
 
 import java.util.HashSet;
@@ -13,16 +14,16 @@ import java.util.Set;
 
 public class Game {
     private final int totalCells;
-    private final Board board;
+    private final IGameBoard board;
     private volatile boolean gameOver = false;
     private volatile int initialPosition = 1;
-    private final Player[] players;
-    private final Queue<Player> playerQueue = new LinkedList<>();
+    private final IPlayer[] players;
+    private final Queue<IPlayer> playerQueue = new LinkedList<>();
 
-    public Game(int boardSize, int numPlayers) {
-        this.totalCells = boardSize * boardSize;
-        this.board = new Board(boardSize);
-        this.players = new Player[numPlayers];
+    public Game(IGameBoard board, int numPlayers) {
+        this.totalCells = board.getSize() * board.getSize();
+        this.board = board;
+        this.players = new IPlayer[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
             this.players[i] = new Player("P" + (i + 1));
             this.players[i].setPosition(1);
@@ -65,7 +66,7 @@ public class Game {
 
     public void startGame() {
         setMarkers();
-        for (Player p : players) {
+        for (IPlayer p : players) {
             board.placePlayer(p, initialPosition);
             playerQueue.add(p);
         }
@@ -76,7 +77,7 @@ public class Game {
         if (gameOver)
             return;
 
-        Player currentPlayer = playerQueue.poll();
+        IPlayer currentPlayer = playerQueue.poll();
         int turnStartingPosition = currentPlayer.getPosition();
         int finalPosition = performRolls(currentPlayer);
 
@@ -98,7 +99,7 @@ public class Game {
         }
     }
 
-    private int performRolls(Player currentPlayer) {
+    private int performRolls(IPlayer currentPlayer) {
         int turnStartingPosition = currentPlayer.getPosition();
         int currentPos = turnStartingPosition;
         int sixCount = 0;
@@ -138,7 +139,7 @@ public class Game {
         return currentPos;
     }
 
-    private int handleMarkers(Player currentPlayer, int pos) {
+    private int handleMarkers(IPlayer currentPlayer, int pos) {
         if (board.getCell(pos).hasMarker()) {
             System.out.println("\n>>> "
                     + board.getCell(pos).getMarker()
