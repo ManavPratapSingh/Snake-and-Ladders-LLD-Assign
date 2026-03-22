@@ -1,6 +1,8 @@
 package org.manav.snake_and_ladders.modules.game;
 
 import org.manav.snake_and_ladders.modules.board.IGameBoard;
+import org.manav.snake_and_ladders.modules.die.IDie;
+import org.manav.snake_and_ladders.modules.die.SixFaceDie;
 import org.manav.snake_and_ladders.modules.marker.Ladder;
 import org.manav.snake_and_ladders.modules.marker.Snake;
 import org.manav.snake_and_ladders.modules.player.IPlayer;
@@ -19,6 +21,7 @@ public class Game {
     private volatile int initialPosition = 1;
     private final IPlayer[] players;
     private final Queue<IPlayer> playerQueue = new LinkedList<>();
+    private final IDie die;
 
     public Game(IGameBoard board, int numPlayers) {
         this.totalCells = board.getSize() * board.getSize();
@@ -28,6 +31,7 @@ public class Game {
             this.players[i] = new Player("P" + (i + 1));
             this.players[i].setPosition(1);
         }
+        this.die = new SixFaceDie();
     }
 
     public void setMarkers() {
@@ -107,7 +111,7 @@ public class Game {
 
         while (firstRollInTurn || (sixCount > 0 && sixCount < 3)) { // for repeating turns when 6 is rolled
             firstRollInTurn = false;
-            int move = (int) (Math.random() * 6) + 1;
+            int move = die.roll();
             System.out.println("\n--- Player " + currentPlayer.getSymbol() + " rolled: " + move + " ---");
 
             if (move == 6) { // case handling when 6 is rolled
